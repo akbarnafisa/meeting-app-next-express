@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -41,8 +42,11 @@ export default function HostRoom() {
       <Card className="w-[400px]">
         <CardHeader>
           <CardTitle>Host a Meeting</CardTitle>
+          <CardDescription>
+            Create your new meeting in one-click
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="mb-4">
           <div className="grid w-full max-w-sm items-center gap-2.5 mb-6">
             <Label htmlFor="email">Room Name</Label>
             <Input
@@ -62,16 +66,11 @@ export default function HostRoom() {
             </label>
           </div>
         </CardContent>
-        <CardFooter className="flex">
-          <Button
-            className="flex-1 mr-2"
-            disabled={isButtonDisabled}
-            onClick={onSubmitRoomHost}
-          >
+        <CardFooter className="flex justify-between">
+          <Button disabled={isButtonDisabled} onClick={onSubmitRoomHost}>
             Create Room
           </Button>
-
-          <Button className="flex-1" variant={"outline"} asChild>
+          <Button variant={"outline"} asChild>
             <Link href="/">Cancel</Link>
           </Button>
         </CardFooter>
