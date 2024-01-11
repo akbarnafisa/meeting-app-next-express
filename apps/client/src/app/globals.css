@@ -72,3 +72,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.videos_container_styles {
+  @apply flex flex-col sm:flex-row flex-wrap flex-1 w-[95%] mx-auto py-2 gap-2 justify-center;
+}
+
+.video_container_style {
+  @apply flex flex-1 justify-center;
+}
