@@ -1,0 +1,12 @@
+FROM node:18-alpine
+
+WORKDIR /main
+
+COPY apps/client/package.json apps/client/package.json
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install --pure-lockfile --cache-folder ./yarncache; rm -rf ./yarncache; 
+
+COPY apps/client apps/client

@@ -1,0 +1,49 @@
+version: "3.8"
+name: meeting-app-next-express
+services:
+  server:
+    container_name: meeting-app-next-express-server
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./apps/server/dockerfile.dev
+    ports:
+      - ${SERVER_PORT}:4000
+    volumes:
+      - .:/main
+      - /main/node_modules/
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - postgres
+    command: >
+      sh -c "
+        yarn workspace server dev
+      "
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    container_name: meeting-app-next-express-postgres
+    env_file:
+      - ./.env.dev
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./apps/server/init-db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  client:
+    container_name: meeting-app-next-express-client
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./apps/client/dockerfile.dev
+    ports:
+      - ${CLIENT_PORT}:3000
+    volumes:
+      - .:/main
+      - /main/node_modules/
+    command: yarn workspace client dev
+
+volumes:
+  db:
+    driver: local
