@@ -1,4 +1,5 @@
 import { IMeetingConfig } from "@/interface/room";
+import { createNewRoom } from "./socket";
 
 let localStream: null | MediaStream = null;
 
@@ -12,6 +13,7 @@ export const getLocalPreviewAndRoomConnection = async (
 
     showVideoStream(localStream, socketId);
 
+    createNewRoom(config)
     // config.isHostMeeting
     // ? createNewRoom(config)
     // : joinRoom(config)
@@ -44,12 +46,12 @@ export const showVideoStream = (
   videoElement.autoplay = true;
   videoElement.srcObject = stream;
   
-  // if (connectedUserSocketId) {
-  //   videoElement.id = `${connectedUserSocketId}.video`;
-  // }
-  // videoElement.onloadedmetadata = () => {
-  //   videoElement.play();
-  // };
+  if (connectedUserSocketId) {
+    videoElement.id = `${connectedUserSocketId}.video`;
+  }
+  videoElement.onloadedmetadata = () => {
+    videoElement.play();
+  };
 
   videoContainer.appendChild(videoElement);
   videosContainer?.appendChild(videoContainer);

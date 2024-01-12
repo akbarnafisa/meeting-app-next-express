@@ -7,6 +7,9 @@ type Action = {
   setIsInitiateRoom: (value: boolean) => void;
   setVideo: () => void;
   setMicrophone: () => void;
+  setSocketId: (value: string) => void;
+  setRoomId: (value: string) => void;
+  setMeetingUsers: (value: any) => void;
 };
 
 // Create your store, which includes both state and (optionally) actions
@@ -19,6 +22,25 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
   isMicrophoneActive: false,
   isVideoActive: false,
   socketId: "",
+  meetingUsers: [],
+
+  setSocketId: (value: string) => {
+    set(() => ({
+      socketId: value,
+    }));
+  },
+
+  setRoomId: (value: string) => {
+    set(() => ({
+      roomId: value,
+    }));
+  },
+
+  setMeetingUsers: (value: any) => {
+    set(() => ({
+      meetingUsers: value,
+    }));
+  },
 
   setMeetingConfig: (config) => {
     set(() => ({

@@ -12,7 +12,6 @@ export default function JoinRoom() {
 
   useEffect(() => {
     const initiateRoom = async () => {
-      console.log(4444);
 
       meetingStore.setIsInitiateRoom(true);
 
@@ -27,13 +26,12 @@ export default function JoinRoom() {
       );
 
       meetingStore.setIsInitiateRoom(false);
-      // meetingStore.setMicrophone();
-      // if (!meetingStore.isConnectOnlyAudio) meetingStore.setVideo();
+      meetingStore.setMicrophone();
+      if (!meetingStore.isConnectOnlyAudio) meetingStore.setVideo();
     };
 
     initiateRoom();
 
-    console.log(2222);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
