@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_URL")
+  directUrl         = env("POSTGRES_URL_NON_POOLING")
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model socket_user {
+  id         Int         @default(autoincrement())
+  userId     String      @id @default(uuid()) @map("user_id")
+  name       String      @db.VarChar(50)
+  socketId   String      @map("socket_id")
+  isHostRoom Boolean     @default(false) @map("is_host_room")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  roomId     String      @map("room_id")
+  room       socket_room @relation(fields: [roomId], references: [roomId])
+}
+
+model socket_room {
+  id         Int          @default(autoincrement())
+  roomId     String       @id @default(uuid()) @map("room_id")
+  users      socket_user[]
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  isActive  Boolean      @default(false) @map("is_active")
+}
