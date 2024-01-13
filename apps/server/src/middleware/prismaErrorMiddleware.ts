@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 import type { ErrorRequestHandler } from 'express';
-import { logger } from '../application/logging';
 
 export const prismaErrorMiddleware: ErrorRequestHandler = (err, _, res, next) => {
   if (!err) {
@@ -27,7 +26,6 @@ export const prismaErrorMiddleware: ErrorRequestHandler = (err, _, res, next) =>
           },
         });
       default:
-        logger.debug(`Unhandled error with code ${err.code} in prismaErrorHandler`);
         return res.sendStatus(500);
     }
   } else {
