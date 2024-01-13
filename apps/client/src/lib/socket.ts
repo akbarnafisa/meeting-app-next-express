@@ -1,51 +1,28 @@
-import io, { Socket } from 'socket.io-client'
+import { Socket } from "socket.io-client";
 
-import { IMeetingConfig } from "@/interface/room"
-import useRoomStore from '@/store'
+import { IMeetingConfig } from "@/interface/room";
+import { IRoomStore } from "@/store";
 
-let socket: Socket | null = null
+let socket: Socket | null = null;
 
-export const useConnectSocketIoServer = (socketDomain: string) => {
-  const roomStore = useRoomStore((state) => state)
-  socket = io(socketDomain)
+export const connectSocketIoServer = (
+  socket: Socket,
+  roomStore: IRoomStore
+) => {
+  socket?.volatile.on("user_connect", (data: any) => {
+    console.log("user_connect", data);
+  });
 
-  socket.on('connect', () => {
-    roomStore.setSocketId(socket?.id as string)
-  })
+  socket?.volatile.on("user_disconnect", (data: any) => {
+    console.log("user_disconnect", data);
+  });
+};
 
-  socket?.volatile.on('room-id', (data: any) => {
-    roomStore.setRoomId(data.roomId)
-  })
-
-  socket?.volatile.on('room-users', (data: any) => {
-    roomStore.setMeetingUsers(data.connectedUsers)
-  })
-
-  // socket?.volatile.on('connection-prepare', (data: any) => {
-  //   prepareNewPeerConnection(data.connectedUserSocketId, false)
-
-  //   socket?.volatile.emit('connection-init', { connectedUserSocketId: data.connectedUserSocketId })
-  // })
-
-  // socket?.volatile.on('connection-signal', (data: any) => {
-  //   handleSignalingData(data)
-  // })
-
-  // socket?.volatile.on('connection-init', (data: any) => {
-  //   prepareNewPeerConnection(data.connectedUserSocketId, true)
-  // })
-
-  // socket?.volatile.on('user-disconnected', (data: any) => {
-  //   removePeerConnection(data)
-  // })
-}
-
-
-export const createNewRoom = (meetingConfig: IMeetingConfig) => {
+export const createNewRoom = (socket: Socket, meetingConfig: IMeetingConfig) => {
   const data = {
     meetingName: meetingConfig.meetingName,
     isHostMeeting: meetingConfig.isHostMeeting,
-  }
+  };
 
-  socket?.volatile.emit('create-new-room', data)
-}
+  socket?.volatile.emit("create-new-room", data);
+};

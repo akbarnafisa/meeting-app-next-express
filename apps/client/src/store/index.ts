@@ -76,4 +76,6 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
   },
 }));
 
+export type IRoomStore = IRoomState & Action
+
 export default useRoomStore;

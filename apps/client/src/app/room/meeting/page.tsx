@@ -2,38 +2,45 @@
 
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
+import useSocket from "@/lib/hooks/useSocket";
 import { getLocalPreviewAndRoomConnection } from "@/lib/rtc-handler";
+import { connectSocketIoServer } from "@/lib/socket";
 import useRoomStore from "@/store";
 import { useEffect } from "react";
 
 export default function JoinRoom() {
   const { toast } = useToast();
   const meetingStore = useRoomStore((state) => state);
+  const socket = useSocket("http://localhost:4000");
 
   useEffect(() => {
     const initiateRoom = async () => {
-
       meetingStore.setIsInitiateRoom(true);
 
-      await getLocalPreviewAndRoomConnection(
-        {
-          isConnectOnlyAudio: meetingStore.isConnectOnlyAudio,
-          meetingId: meetingStore.roomId,
-          meetingName: meetingStore.meetingName,
-          isHostMeeting: meetingStore.isHostMeeting,
-        },
-        meetingStore.socketId
-      );
+      if (socket) {
+        connectSocketIoServer(socket, meetingStore);
 
-      meetingStore.setIsInitiateRoom(false);
-      meetingStore.setMicrophone();
-      if (!meetingStore.isConnectOnlyAudio) meetingStore.setVideo();
+        await getLocalPreviewAndRoomConnection(
+          {
+            isConnectOnlyAudio: meetingStore.isConnectOnlyAudio,
+            meetingId: meetingStore.roomId,
+            meetingName: meetingStore.meetingName,
+            isHostMeeting: meetingStore.isHostMeeting,
+          },
+          meetingStore.socketId,
+          socket
+        );
+
+        meetingStore.setIsInitiateRoom(false);
+        meetingStore.setMicrophone();
+        if (!meetingStore.isConnectOnlyAudio) meetingStore.setVideo();
+      }
     };
 
     initiateRoom();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
 
   const handleCopyRoomId = async () => {
     await navigator.clipboard.writeText(meetingStore.roomId);
