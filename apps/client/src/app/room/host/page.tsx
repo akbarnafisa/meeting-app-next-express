@@ -14,10 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useRoomStore from "@/store";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useMemo, useState } from "react";
 
 export default function HostRoom() {
   const setMeetingConfig = useRoomStore((state) => state.setMeetingConfig);
+  const router = useRouter();
+
   const [roomName, setRoomName] = useState("");
   const [useAudio, setUseAudio] = useState<boolean>(false);
 
@@ -31,6 +34,8 @@ export default function HostRoom() {
       isHostMeeting: true,
       meetingName: roomName,
     });
+
+    router.replace("/room/meeting");
   };
 
   const isButtonDisabled = useMemo(() => {
@@ -48,11 +53,11 @@ export default function HostRoom() {
         </CardHeader>
         <CardContent className="mb-4">
           <div className="grid w-full max-w-sm items-center gap-2.5 mb-6">
-            <Label htmlFor="email">Room Name</Label>
+            <Label htmlFor="email">Name</Label>
             <Input
               type="text"
               id="email"
-              placeholder="Enter the meeting room name"
+              placeholder="Enter the your name"
               onChange={onInputRoomName}
             />
           </div>
