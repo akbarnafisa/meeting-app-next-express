@@ -1,6 +1,7 @@
 import { IMeetingConfig } from "@/interface/room";
 import { createNewRoom } from "./socket";
 import { Socket } from "socket.io-client";
+import type { SimplePeer } from 'simple-peer'
 
 let localStream: null | MediaStream = null;
 
@@ -14,9 +15,7 @@ export const getLocalPreviewAndRoomConnection = async (
     localStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
 
     showVideoStream(localStream, socketId);
-
     createNewRoom(socket, config);
-
     // config.isHostMeeting
     // ? createNewRoom(config)
     // : joinRoom(config)
@@ -71,3 +70,27 @@ export const videoToggle = (value: boolean) => {
 
   localStream.getVideoTracks()[0].enabled = value;
 };
+
+
+let peers: Record<string, InstanceType<SimplePeer>> = {}
+
+export const removePeerConnection = (data: any) => {
+  const { socketId } = data
+
+  const videoContainer = document.getElementById(socketId)
+  const videoElement = document.getElementById(`${socketId}.video`) as any
+
+  if (videoContainer && videoElement) {
+    const tracks = videoElement.srcObject?.getTracks()
+    tracks.forEach((t: any) => t.stop())
+
+    videoElement.srcObject = null
+    videoContainer.removeChild(videoElement)
+    videoContainer.parentNode?.removeChild(videoContainer)
+
+    if (peers[socketId]) {
+      peers[socketId].destroy()
+      delete peers[socketId]
+    }
+  }
+}

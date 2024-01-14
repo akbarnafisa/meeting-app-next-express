@@ -2,24 +2,25 @@
 
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import useSocket from "@/lib/hooks/useSocket";
+import { useSocket } from "@/lib/hooks/useSocket";
 import { getLocalPreviewAndRoomConnection } from "@/lib/rtc-handler";
-import { connectSocketIoServer } from "@/lib/socket";
 import useRoomStore from "@/store";
 import { useEffect } from "react";
 
 export default function JoinRoom() {
   const { toast } = useToast();
   const meetingStore = useRoomStore((state) => state);
-  const socket = useSocket("http://localhost:4000");
+  const socketContext = useSocket();
 
   useEffect(() => {
     const initiateRoom = async () => {
       meetingStore.setIsInitiateRoom(true);
 
-      if (socket) {
-        connectSocketIoServer(socket, meetingStore);
+      console.log("initiateRoom socket", {
+        socketContext,
+      });
 
+      if (socketContext && socketContext.socket) {
         await getLocalPreviewAndRoomConnection(
           {
             isConnectOnlyAudio: meetingStore.isConnectOnlyAudio,
@@ -28,7 +29,7 @@ export default function JoinRoom() {
             isHostMeeting: meetingStore.isHostMeeting,
           },
           meetingStore.socketId,
-          socket
+          socketContext.socket
         );
 
         meetingStore.setIsInitiateRoom(false);
@@ -40,7 +41,7 @@ export default function JoinRoom() {
     initiateRoom();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket]);
+  }, [socketContext]);
 
   const handleCopyRoomId = async () => {
     await navigator.clipboard.writeText(meetingStore.roomId);
