@@ -1,10 +1,10 @@
 import express from "express";
-import { registerController, loginController } from "../controller/users";
-import { getTagsController } from "../controller/tags";
+import { rtcController } from "../controller/rtc";
+
 
 const router = express.Router();
-router.post("/api/users", registerController);
-router.post("/api/users/login", loginController);
-router.get("/api/tags", getTagsController);
+
+router.get("/rtc/room/:id", rtcController);
+
 
 export default router;
