@@ -8,6 +8,7 @@ export interface IRoomState {
   isMicrophoneActive: boolean;
   socketId: string;
   meetingUsers: IUser[];
+  messages: IChatMessage[]
 }
 
 export interface IUser {
@@ -31,4 +32,10 @@ export interface IMeetingConfig {
   meetingId: string;
   meetingName: string;
   isHostMeeting?: boolean;
+}
+
+export interface IChatMessage {
+  socketId: string
+  name: string
+  content: string
 }

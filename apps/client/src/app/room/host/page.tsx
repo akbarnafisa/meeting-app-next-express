@@ -73,7 +73,7 @@ export default function HostRoom() {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button disabled={isButtonDisabled} onClick={onSubmitRoomHost}>
-            Create Room
+            Create Meeting
           </Button>
           <Button variant={"outline"} asChild>
             <Link href="/">Cancel</Link>

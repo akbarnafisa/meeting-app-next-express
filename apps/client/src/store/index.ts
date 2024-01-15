@@ -1,4 +1,4 @@
-import { IRoomState, ISetMeetingConfig } from "@/interface/room";
+import { IChatMessage, IRoomState, ISetMeetingConfig } from "@/interface/room";
 import { micToggle, videoToggle } from "@/lib/rtc-handler";
 import { create } from "zustand";
 
@@ -23,6 +23,7 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
   isVideoActive: false,
   socketId: "",
   meetingUsers: [],
+  messages: [],
 
   setSocketId: (value: string) => {
     set(() => ({
@@ -59,9 +60,9 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
 
   setMicrophone: () => {
     set((state) => {
-      micToggle(!state.isInitiateRoom);
+      micToggle(!state.isMicrophoneActive);
       return {
-        isInitiateRoom: !state.isInitiateRoom,
+        isMicrophoneActive: !state.isMicrophoneActive,
       };
     });
   },
@@ -76,6 +77,11 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
   },
 }));
 
-export type IRoomStore = IRoomState & Action
+export type IRoomStore = IRoomState & Action;
+
+export const setMessages = (messages: IChatMessage) =>
+  useRoomStore.setState({
+    messages: [...useRoomStore.getState().messages, messages],
+  });
 
 export default useRoomStore;

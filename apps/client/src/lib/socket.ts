@@ -2,7 +2,11 @@ import { Socket } from "socket.io-client";
 
 import { IMeetingConfig } from "@/interface/room";
 import { IRoomStore } from "@/store";
-import { removePeerConnection } from "./rtc-handler";
+import {
+  handleSignalingData,
+  prepareNewPeerConnection,
+  removePeerConnection,
+} from "./rtc-handler";
 
 export const connectSocketIoServer = (
   socket: Socket,
@@ -31,23 +35,39 @@ export const connectSocketIoServer = (
     roomStore.setMeetingUsers(data.connectedUsers);
   });
 
-  // socket?.volatile.on('connection-prepare', (data: any) => {
-  //   prepareNewPeerConnection(data.connectedUserSocketId, false)
+  socket?.volatile.on("connection-prepare", (data: any) => {
+    console.log("connection-prepare", {
+      data,
+    });
+    // setup the responder
+    prepareNewPeerConnection(data.connectedUserSocketId, false, socket);
 
-  //   socket?.volatile.emit('connection-init', { connectedUserSocketId: data.connectedUserSocketId })
-  // })
+    // set
+    socket?.volatile.emit("connection-init", {
+      connectedUserSocketId: data.connectedUserSocketId,
+    });
+  });
 
-  // socket?.volatile.on('connection-signal', (data: any) => {
-  //   handleSignalingData(data)
-  // })
+  socket?.volatile.on("connection-signal", (data: any) => {
+    console.log("connection-signal", {
+      data,
+    });
+    handleSignalingData(data);
+  });
 
-  // socket?.volatile.on('connection-init', (data: any) => {
-  //   prepareNewPeerConnection(data.connectedUserSocketId, true)
-  // })
+  socket?.volatile.on("connection-init", (data: any) => {
+    console.log("connection-init", {
+      data,
+    });
+    prepareNewPeerConnection(data.connectedUserSocketId, true, socket);
+  });
 
-  socket?.volatile.on('user-disconnected', (data: any) => {
-    removePeerConnection(data)
-  })
+  socket?.volatile.on("user-disconnected", (data: any) => {
+    console.log("user-disconnected", {
+      data,
+    });
+    removePeerConnection(data);
+  });
 };
 
 export const createNewRoom = (
@@ -62,4 +82,20 @@ export const createNewRoom = (
   console.log("createNewRoom", data);
 
   socket?.volatile.emit("create-new-room", data);
+};
+
+export const joinRoom = (socket: Socket, meetingConfig: IMeetingConfig) => {
+  const data = {
+    meetingId: meetingConfig.meetingId,
+    meetingName: meetingConfig.meetingName,
+  };
+
+  socket?.volatile.emit("join-room", data);
+};
+
+export const signalPeerData = (socket: Socket, data: any) => {
+  console.log("signalPeerData", {
+    data,
+  });
+  socket?.volatile.emit("connection-signal", data);
 };

@@ -12,3 +12,8 @@ export interface ICreateRoom {
   meetingName: string;
   isHostMeeting: boolean;
 }
+
+export interface IJoinRoom {
+  meetingId: string;
+  meetingName: string;
+}

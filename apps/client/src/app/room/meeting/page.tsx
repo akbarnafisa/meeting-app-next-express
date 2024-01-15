@@ -58,7 +58,7 @@ export default function JoinRoom() {
           className="self-center mt-2 cursor-pointer"
           onClick={handleCopyRoomId}
         >
-          Room ID: 12345
+          Room ID: {meetingStore.roomId}
         </Badge>
 
         <section id="videos_container" />

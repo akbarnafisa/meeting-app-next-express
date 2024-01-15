@@ -17,7 +17,9 @@ export default function Home() {
         </CardHeader>
         <CardContent>Join or create your meeting</CardContent>
         <CardFooter className="flex">
-          <Button className="flex-1 mr-2">Join a Meeting</Button>
+          <Button className="flex-1 mr-2">
+            <Link href="/room/join">Join a Meeting</Link>
+          </Button>
           <Button className="flex-1" variant={"outline"} asChild>
             <Link href="/room/host">Host a Meeting</Link>
           </Button>
