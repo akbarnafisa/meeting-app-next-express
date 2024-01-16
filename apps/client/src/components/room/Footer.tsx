@@ -51,7 +51,6 @@ const Footer = () => {
           iconActive={<IconShare />}
           textActive="Share"
           onClick={() => roomStore.setShareScreen()}
-
         />
 
         <FooterButton

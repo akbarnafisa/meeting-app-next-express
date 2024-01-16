@@ -45,7 +45,7 @@ export default function JoinRoom() {
 
 
   return (
-    <section className="h-screen flex flex-col">
+    <section className="min-h-screen flex flex-col overflow-hidden">
       <Content />
       <Footer />
     </section>
