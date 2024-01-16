@@ -1,6 +1,6 @@
 export default function IconMicrophoneOff() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
       <g
         stroke="#fff"
         stroke-linecap="round"

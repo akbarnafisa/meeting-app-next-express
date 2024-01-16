@@ -1,14 +1,13 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/components/ui/use-toast";
+import Footer from "@/components/room/Footer";
+import Content from "@/components/room/Content";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { getLocalPreviewAndRoomConnection } from "@/lib/rtc-handler";
 import useRoomStore from "@/store";
 import { useEffect } from "react";
 
 export default function JoinRoom() {
-  const { toast } = useToast();
   const meetingStore = useRoomStore((state) => state);
   const socketContext = useSocket();
 
@@ -43,27 +42,12 @@ export default function JoinRoom() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socketContext]);
 
-  const handleCopyRoomId = async () => {
-    await navigator.clipboard.writeText(meetingStore.roomId);
-    toast({
-      description: "Room Id has been sent coppied!",
-    });
-  };
+
 
   return (
-    <div className="flex flex-1 text-white">
-      <section className="flex flex-col flex-1">
-        <Badge
-          variant={"secondary"}
-          className="self-center mt-2 cursor-pointer"
-          onClick={handleCopyRoomId}
-        >
-          Room ID: {meetingStore.roomId}
-        </Badge>
-
-        <section id="videos_container" />
-      </section>
-      <section className="flex flex-col"></section>
-    </div>
+    <section className="h-screen flex flex-col">
+      <Content />
+      <Footer />
+    </section>
   );
 }
