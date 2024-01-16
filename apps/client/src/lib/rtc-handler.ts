@@ -164,3 +164,13 @@ export const handleSignalingData = (data: any) => {
   console.log("handleSignalingData", data);
   peers[data.connectedUserSocketId].signal(data.signal);
 };
+
+
+export const sendMessageUsingDataChannel = (message: IChatMessage) => {
+  concatNewMessage(message)
+
+  const stringifyMessage = JSON.stringify(message)
+  for (let socketId in peers) {
+    peers[socketId].send(stringifyMessage)
+  }
+}
