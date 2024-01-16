@@ -1,3 +1,4 @@
+import useRoomStore from "@/store";
 import IconCamera from "../icon/IconCamera";
 import IconCameraOff from "../icon/IconCameraOff";
 import IconChat from "../icon/IconChat";
@@ -9,23 +10,32 @@ import { Button } from "../ui/button";
 import FooterButton from "./FooterButton";
 
 const Footer = () => {
+  const roomStore = useRoomStore((state) => state);
+  console.log({
+    roomStore,
+  });
+
   return (
     <footer className="flex justify-around sm:justify-between items-center p-2 border-t border-solid">
       <section className="flex gap-1 sm:gap-2">
         <FooterButton
-          isActive={true}
+          isActive={roomStore.isMicrophoneActive}
           iconActive={<IconMicrophone />}
           iconNotActive={<IconMicrophoneOff />}
           textActive="Mute"
           textNotActive="Unmute"
+          onClick={() => roomStore.setMicrophone()}
         />
-        <FooterButton
-          isActive={true}
-          iconActive={<IconCamera />}
-          iconNotActive={<IconCameraOff />}
-          textActive="Stop Video"
-          textNotActive="Start Video"
-        />
+        {!roomStore.isConnectOnlyAudio && (
+          <FooterButton
+            isActive={roomStore.isVideoActive}
+            iconActive={<IconCamera />}
+            iconNotActive={<IconCameraOff />}
+            textActive="Stop Video"
+            textNotActive="Start Video"
+            onClick={() => roomStore.setVideo()}
+          />
+        )}
       </section>
 
       <section className="flex">
@@ -33,18 +43,23 @@ const Footer = () => {
           isActive={true}
           iconActive={<IconPeople />}
           textActive="Participants"
+          onClick={() => roomStore.setIsShowParticipants()}
         />
 
         <FooterButton
           isActive={true}
           iconActive={<IconShare />}
           textActive="Share"
+          onClick={() => roomStore.setShareScreen()}
+
         />
 
         <FooterButton
           isActive={true}
           iconActive={<IconChat />}
           textActive="Chat"
+          onClick={() => roomStore.setIsShowChatRoom()}
+
         />
       </section>
 

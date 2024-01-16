@@ -6,6 +6,9 @@ export interface IRoomState {
   isVideoActive: boolean;
   isConnectOnlyAudio: boolean;
   isMicrophoneActive: boolean;
+  isShowParticipants: boolean,
+  isShareScreenActive: boolean,
+  isShowChatRoom: boolean,
   socketId: string;
   meetingUsers: IUser[];
   messages: IChatMessage[]

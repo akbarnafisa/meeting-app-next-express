@@ -10,6 +10,9 @@ type Action = {
   setSocketId: (value: string) => void;
   setRoomId: (value: string) => void;
   setMeetingUsers: (value: any) => void;
+  setIsShowParticipants: () => void;
+  setIsShowChatRoom: () => void;
+  setShareScreen: () => void;
 };
 
 // Create your store, which includes both state and (optionally) actions
@@ -21,6 +24,9 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
   isInitiateRoom: false,
   isMicrophoneActive: false,
   isVideoActive: false,
+  isShowParticipants: false,
+  isShareScreenActive: false,
+  isShowChatRoom: false,
   socketId: "",
   meetingUsers: [],
   messages: [],
@@ -72,6 +78,30 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
       videoToggle(!state.isVideoActive);
       return {
         isVideoActive: !state.isVideoActive,
+      };
+    });
+  },
+
+  setIsShowParticipants: () => {
+    set((state) => {
+      return {
+        isShowParticipants: !state.isShowParticipants,
+      };
+    });
+  },
+
+  setIsShowChatRoom: () => {
+    set((state) => {
+      return {
+        isShowChatRoom: !state.isShowChatRoom,
+      };
+    });
+  },
+
+  setShareScreen: () => {
+    set((state) => {
+      return {
+        isShareScreenActive: !state.isShareScreenActive,
       };
     });
   },
