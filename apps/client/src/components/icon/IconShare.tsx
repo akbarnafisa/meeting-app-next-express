@@ -5,13 +5,13 @@ export default function IconShare() {
       width="24"
       height="24"
       fill="none"
-      stroke-width="1.5"
+      strokeWidth="1.5"
       color="#fff"
     >
       <path
         stroke="#fff"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M20 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6M12 15V3m0 0L8.5 6.5M12 3l3.5 3.5"
       />
     </svg>

@@ -5,14 +5,14 @@ export default function IconSend() {
       width="24"
       height="24"
       fill="none"
-      stroke-width="1.5"
+      strokeWidth="1.5"
       color="#fff"
     >
       <g
         stroke="#fff"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        clip-path="url(#a)"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        clipPath="url(#a)"
       >
         <path d="M22.152 3.553 11.178 21.004l-1.67-8.596L2 7.898l20.152-4.345ZM9.456 12.444l12.696-8.89" />
       </g>
