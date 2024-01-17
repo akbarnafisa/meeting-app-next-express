@@ -11,12 +11,22 @@ export interface FooterButtonProps
 }
 
 const FooterButton = React.forwardRef<HTMLButtonElement, FooterButtonProps>(
-  ({ ...props }, ref) => {
+  (
+    {
+      isActive,
+      textActive,
+      textNotActive,
+      iconActive,
+      iconNotActive,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <Button className="w-28 h-14 py-2" variant={"ghost"} ref={ref} {...props}>
         <div className="flex flex-col items-center gap-1">
-          {props.isActive ? props.iconActive : props.iconNotActive}
-          {props.isActive ? props.textActive : props.textNotActive}
+          {isActive ? iconActive : iconNotActive}
+          {isActive ? textActive : textNotActive}
         </div>
       </Button>
     );
