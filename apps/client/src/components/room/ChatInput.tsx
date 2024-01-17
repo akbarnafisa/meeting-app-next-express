@@ -1,5 +1,4 @@
 import { FormEvent, useState } from "react";
-import IconSend from "../icon/IconSend";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { IChatMessage } from "@/interface/room";
@@ -12,6 +11,7 @@ export default function ChatInput() {
 
   const onPressInputHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    event.currentTarget.reset()
     onSendMessageHandler();
   };
 
