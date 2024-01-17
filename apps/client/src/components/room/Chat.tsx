@@ -7,14 +7,6 @@ import ChatInput from "./ChatInput";
 const Chat = (props: { className: string }) => {
   const meetingStore = useRoomStore((state) => state);
 
-  const messages = Array(2)
-    .fill("")
-    .map((_, i) => ({
-      socketId: i + 'a',
-      name: i + " uasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdser asdasdasdasdasdasdasd",
-      content: i + "conteasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdas asdasdas asdasdasdasdasdasdddasnt",
-    }));
-
   return (
     <div
       className={props.className + " border-t  flex-1 border-l sm:w-52 md:w-80"}
@@ -31,7 +23,7 @@ const Chat = (props: { className: string }) => {
       <Separator />
 
       <ChatMessages
-        messages={messages}
+        messages={meetingStore.messages}
         authorSocketId={meetingStore.socketId}
       />
 
