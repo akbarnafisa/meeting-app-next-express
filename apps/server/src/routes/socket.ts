@@ -35,17 +35,6 @@ const initSocket = (io: Server) => {
       socket.emit("room-users", {
         connectedUsers,
       });
-
-      console.log("create-new-room", {
-        roomId: {
-          success: true,
-          socketId: socket.id,
-          roomId: socketRoom.roomId,
-        },
-        roomUsers: {
-          connectedUsers,
-        },
-      });
     });
 
     socket.on("join-room", async (payload: IJoinRoom) => {
@@ -70,15 +59,14 @@ const initSocket = (io: Server) => {
         if (user.socketId !== socket.id) {
           const payload = { connectedUserSocketId: socket.id };
 
-          io.volatile.to(user.socketId).emit("connection-prepare", payload);
+          io.to(user.socketId).emit("connection-prepare", payload);
         }
       });
 
-      io.volatile.to(payload.meetingId).emit("room-users", {
+      io.in(payload.meetingId).emit("room-users", {
         connectedUsers,
       });
     });
-    
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     socket.on("connection-signal", async (payload: any) => {
@@ -86,10 +74,11 @@ const initSocket = (io: Server) => {
         signal: payload.signal,
         connectedUserSocketId: socket.id,
       };
-  
-      io.volatile
-        .to(payload.connectedUserSocketId)
-        .emit('connection-signal', signalingData);
+
+      io.to(payload.connectedUserSocketId).emit(
+        "connection-signal",
+        signalingData
+      );
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,10 +86,8 @@ const initSocket = (io: Server) => {
       const initData = {
         connectedUserSocketId: socket.id,
       };
-  
-      io.volatile
-        .to(payload.connectedUserSocketId)
-        .emit('connection-init', initData);
+
+      io.to(payload.connectedUserSocketId).emit("connection-init", initData);
     });
 
     socket.on("disconnect", async () => {
@@ -115,11 +102,11 @@ const initSocket = (io: Server) => {
 
         const connectedUsers = await queryUsersByRoomId(getUser.roomId);
 
-        io.volatile.to(getUser.roomId).emit("user-disconnected", {
+        io.to(getUser.roomId).emit("user-disconnected", {
           socketId: socket.id,
         });
 
-        io.volatile.to(getUser.roomId).emit("room-users", {
+        io.to(getUser.roomId).emit("room-users", {
           connectedUsers,
         });
       }
