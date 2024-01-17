@@ -12,7 +12,7 @@ const Content = () => {
   const handleCopyRoomId = async () => {
     await navigator.clipboard.writeText(meetingStore.roomId);
     toast({
-      description: "Room Id has been sent coppied!",
+      description: "Room Id has been coppied!",
     });
   };
 
