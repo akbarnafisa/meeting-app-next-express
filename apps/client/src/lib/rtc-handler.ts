@@ -174,3 +174,9 @@ export const sendMessageUsingDataChannel = (message: IChatMessage) => {
     peers[socketId].send(stringifyMessage)
   }
 }
+
+export const removeLocalStream = () => {
+  localStream?.getAudioTracks()[0].stop()
+  localStream?.getVideoTracks()[0].stop()
+  localStream = null
+}

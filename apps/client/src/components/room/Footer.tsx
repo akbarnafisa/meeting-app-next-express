@@ -8,12 +8,27 @@ import IconPeople from "../icon/IconPeople";
 import IconShare from "../icon/IconShare";
 import { Button } from "../ui/button";
 import FooterButton from "./FooterButton";
+import { useSocket } from "@/lib/hooks/useSocket";
+import { disconnectSocketIoServer } from "@/lib/socket";
+import { useRouter } from "next/navigation";
 
 const Footer = () => {
   const roomStore = useRoomStore((state) => state);
-  console.log({
-    roomStore,
-  });
+  const socketContext = useSocket();
+  const router = useRouter();
+
+  const onLeaveMeetingRoom = async () => {
+    if (socketContext && socketContext.socket) {
+      disconnectSocketIoServer(socketContext.socket);
+    }
+
+    try {
+      roomStore.resetToDefaultState();
+      router.replace("/");
+    } catch (error) {
+      console.log("Log Error:", error);
+    }
+  };
 
   return (
     <footer className="flex justify-around sm:justify-between items-center p-2 border-t border-solid">
@@ -58,12 +73,13 @@ const Footer = () => {
           iconActive={<IconChat />}
           textActive="Chat"
           onClick={() => roomStore.setIsShowChatRoom()}
-
         />
       </section>
 
       <section className="px-2">
-        <Button variant={"destructive"}>Leave Meeting</Button>
+        <Button variant={"destructive"} onClick={onLeaveMeetingRoom}>
+          Leave Meeting
+        </Button>
       </section>
     </footer>
   );

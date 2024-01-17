@@ -5,6 +5,7 @@ import { IRoomStore } from "@/store";
 import {
   handleSignalingData,
   prepareNewPeerConnection,
+  removeLocalStream,
   removePeerConnection,
 } from "./rtc-handler";
 
@@ -99,3 +100,9 @@ export const signalPeerData = (socket: Socket, data: any) => {
   });
   socket?.volatile.emit("connection-signal", data);
 };
+
+
+export const disconnectSocketIoServer = (socket: Socket) => {
+  removeLocalStream()
+  socket?.volatile.disconnect()
+}

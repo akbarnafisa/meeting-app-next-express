@@ -13,10 +13,10 @@ type Action = {
   setIsShowParticipants: () => void;
   setIsShowChatRoom: () => void;
   setShareScreen: () => void;
+  resetToDefaultState: () => void;
 };
 
-// Create your store, which includes both state and (optionally) actions
-const useRoomStore = create<IRoomState & Action>((set) => ({
+const DEFAULT_STORE = {
   isHostMeeting: false,
   meetingName: "",
   roomId: "",
@@ -30,6 +30,15 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
   socketId: "",
   meetingUsers: [],
   messages: [],
+};
+
+// Create your store, which includes both state and (optionally) actions
+const useRoomStore = create<IRoomState & Action>((set) => ({
+  ...DEFAULT_STORE,
+
+  resetToDefaultState: () => {
+    set(DEFAULT_STORE);
+  },
 
   setSocketId: (value: string) => {
     set(() => ({
