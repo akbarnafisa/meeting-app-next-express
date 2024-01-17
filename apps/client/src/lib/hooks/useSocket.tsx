@@ -27,7 +27,6 @@ const SocketInitation = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
 
-    console.log('SocketInitation')
     const newSocket = io("http://localhost:4000/");
     socketContext?.setSocket(newSocket);
 

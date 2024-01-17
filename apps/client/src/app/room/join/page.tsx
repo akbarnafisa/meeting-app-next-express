@@ -40,11 +40,6 @@ export default function HostRoom() {
     const data = await fetch(`http://localhost:4000/rtc/room/${meetingId}`);
     const result = await data.json() as any;
 
-
-    console.log({
-      result
-    })
-
     if (!result.success) {
       toast({
         description: result.error.errorMsg,

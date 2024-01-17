@@ -15,10 +15,6 @@ export default function JoinRoom() {
     const initiateRoom = async () => {
       meetingStore.setIsInitiateRoom(true);
 
-      console.log("initiateRoom socket", {
-        socketContext,
-      });
-
       if (socketContext && socketContext.socket) {
         await getLocalPreviewAndRoomConnection(
           {
