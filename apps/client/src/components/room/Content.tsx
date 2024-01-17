@@ -28,7 +28,7 @@ const Content = () => {
           className="self-center mt-2 cursor-pointer"
           onClick={handleCopyRoomId}
         >
-          Room ID: {meetingStore.roomId}
+          Meeting ID: {meetingStore.roomId}
         </Badge>
 
         <section id="videos_container" />
