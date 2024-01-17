@@ -1,4 +1,5 @@
 export interface IRoomState {
+  displayStream: MediaStream | null
   isHostMeeting: boolean;
   meetingName: string;
   roomId: string;
@@ -41,4 +42,10 @@ export interface IChatMessage {
   socketId: string
   name: string
   content: string
+}
+
+export interface IGetDisplayMedia {
+  success: boolean
+  stream?: MediaStream | null
+  errorMessage?: string
 }
