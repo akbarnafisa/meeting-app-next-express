@@ -55,13 +55,17 @@ const initSocket = (io: Server) => {
       const connectedUsers = await queryUsersByRoomId(payload.meetingId);
 
       // for each connected user other than current user, prepare new connection for them
-      connectedUsers.forEach((user) => {
-        if (user.socketId !== socket.id) {
-          const payload = { connectedUserSocketId: socket.id };
+      // connectedUsers.forEach((user) => {
+      //   if (user.socketId !== socket.id) {
+      //     const payload = { connectedUserSocketId: socket.id };
 
-          io.to(user.socketId).emit("connection-prepare", payload);
-        }
-      });
+      //
+      //   }
+      // });
+
+      socket
+        .to(payload.meetingId)
+        .emit("connection-prepare", { connectedUserSocketId: socket.id });
 
       io.in(payload.meetingId).emit("room-users", {
         connectedUsers,
