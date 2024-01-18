@@ -1,11 +1,16 @@
 import { IChatMessage, IRoomState, ISetMeetingConfig } from "@/interface/room";
-import { micToggle, videoToggle } from "@/lib/rtc-handler";
+import {
+  getDisplayMediaStream,
+  micToggle,
+  screenShareToogle,
+  videoToggle,
+} from "@/lib/rtc-handler";
 import { create } from "zustand";
 
 type Action = {
   setMeetingConfig: (config: ISetMeetingConfig) => void;
   setIsInitiateRoom: (value: boolean) => void;
-  setVideo: () => void;
+  setVideo: (status?: boolean) => void;
   setMicrophone: () => void;
   setSocketId: (value: string) => void;
   setRoomId: (value: string) => void;
@@ -17,6 +22,7 @@ type Action = {
 };
 
 const DEFAULT_STORE = {
+  displayStream: null,
   isHostMeeting: false,
   meetingName: "",
   roomId: "",
@@ -108,12 +114,40 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
     });
   },
 
-  setShareScreen: () => {
-    set((state) => {
-      return {
-        isShareScreenActive: !state.isShareScreenActive,
-      };
-    });
+  setShareScreen: async () => {
+    if (!useRoomStore.getState().isShareScreenActive) {
+      const displayMediaStream = await getDisplayMediaStream();
+      if (displayMediaStream.success) {
+        const displayStream = displayMediaStream.stream as MediaStream;
+
+        displayStream.getVideoTracks()[0].onended = () => {
+          useRoomStore.getState().setShareScreen();
+        };
+
+        useRoomStore.setState(() => ({
+          displayStream,
+          isShareScreenActive: true,
+        }));
+
+        screenShareToogle(
+          useRoomStore.getState().isShareScreenActive,
+          useRoomStore.getState().displayStream
+        );
+      }
+    } else {
+      useRoomStore
+        .getState()
+        .displayStream?.getTracks()
+        .forEach((t) => t?.stop());
+      set((state) => {
+        return {
+          isShareScreenActive: !state.isShareScreenActive,
+          displayStream: null,
+        };
+      });
+
+      screenShareToogle(useRoomStore.getState().isShareScreenActive);
+    }
   },
 }));
 
