@@ -82,11 +82,12 @@ const useRoomStore = create<IRoomState & Action>((set) => ({
     });
   },
 
-  setVideo: () => {
+  setVideo: (status?: boolean) => {
     set((state) => {
-      videoToggle(!state.isVideoActive);
+      const videoStatus = status !== undefined ? status : !state.isVideoActive;
+      videoToggle(videoStatus);
       return {
-        isVideoActive: !state.isVideoActive,
+        isVideoActive: videoStatus,
       };
     });
   },

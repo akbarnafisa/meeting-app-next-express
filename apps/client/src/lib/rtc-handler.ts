@@ -15,9 +15,10 @@ export const getLocalPreviewAndRoomConnection = async (
   socket: Socket
 ) => {
   try {
-    const mediaConstraints = getMediaConstraints(config.isConnectOnlyAudio);
-    localStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
-
+    localStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    });
     showVideoStream(localStream, socketId);
 
     config.isHostMeeting
@@ -28,12 +29,6 @@ export const getLocalPreviewAndRoomConnection = async (
   }
 };
 
-const getMediaConstraints = (connectAudioOnly: boolean) => {
-  return {
-    audio: true,
-    video: !connectAudioOnly,
-  };
-};
 
 export const showVideoStream = (
   stream: MediaStream,
@@ -85,7 +80,7 @@ export const removePeerConnection = (data: any) => {
 
   if (videoContainer && videoElement) {
     const tracks = videoElement.srcObject?.getTracks();
-    tracks.forEach((t: any) => t.stop());
+    tracks.forEach((t: any) => t?.stop());
 
     videoElement.srcObject = null;
     videoContainer.removeChild(videoElement);

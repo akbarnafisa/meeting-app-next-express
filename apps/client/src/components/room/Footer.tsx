@@ -41,7 +41,6 @@ const Footer = () => {
           textNotActive="Unmute"
           onClick={() => roomStore.setMicrophone()}
         />
-        {!roomStore.isConnectOnlyAudio && (
           <FooterButton
             isActive={roomStore.isVideoActive}
             iconActive={<IconCamera />}
@@ -50,7 +49,6 @@ const Footer = () => {
             textNotActive="Start Video"
             onClick={() => roomStore.setVideo()}
           />
-        )}
       </section>
 
       <section className="flex">

@@ -29,7 +29,7 @@ export default function JoinRoom() {
 
         meetingStore.setIsInitiateRoom(false);
         meetingStore.setMicrophone();
-        if (!meetingStore.isConnectOnlyAudio) meetingStore.setVideo();
+        meetingStore.setVideo(!meetingStore.isConnectOnlyAudio);
       }
     };
 
