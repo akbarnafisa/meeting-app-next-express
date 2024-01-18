@@ -19,6 +19,9 @@ const Footer = () => {
 
   const onLeaveMeetingRoom = async () => {
     if (socketContext && socketContext.socket) {
+      if (roomStore.isShareScreenActive) {
+        roomStore.setShareScreen();
+      }
       disconnectSocketIoServer(socketContext.socket);
     }
 
@@ -41,14 +44,14 @@ const Footer = () => {
           textNotActive="Unmute"
           onClick={() => roomStore.setMicrophone()}
         />
-          <FooterButton
-            isActive={roomStore.isVideoActive}
-            iconActive={<IconCamera />}
-            iconNotActive={<IconCameraOff />}
-            textActive="Stop Video"
-            textNotActive="Start Video"
-            onClick={() => roomStore.setVideo()}
-          />
+        <FooterButton
+          isActive={roomStore.isVideoActive}
+          iconActive={<IconCamera />}
+          iconNotActive={<IconCameraOff />}
+          textActive="Stop Video"
+          textNotActive="Start Video"
+          onClick={() => roomStore.setVideo()}
+        />
       </section>
 
       <section className="flex">
