@@ -1,6 +1,5 @@
 node_modules
 dist
-.env
 .env.dev
 .env.prod
 stack.env
