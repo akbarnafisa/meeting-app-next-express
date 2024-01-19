@@ -1,5 +1,5 @@
 version: "3.8"
-name: my-project-prod
+name: meeting-app-next-express-server-prod
 services:
   server:
     container_name: meeting-app-next-express-server-prod
@@ -23,7 +23,7 @@ services:
   postgres:
     image: postgres
     restart: unless-stopped
-    container_name: my-project-prod-postgres
+    container_name: meeting-app-next-express-server-prod-postgres
     env_file:
       - stack.env
     ports:
