@@ -1,0 +1,27 @@
+FROM node:18-alpine as builder
+
+WORKDIR /main
+
+COPY packages/libs/package.json packages/libs/package.json
+COPY packages/validation/package.json  packages/validation/package.json 
+COPY apps/server/package.json apps/server/package.json 
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install --pure-lockfile --cache-folder ./yarncache; rm -rf ./yarncache; 
+
+COPY packages/libs packages/libs
+COPY packages/validation packages/validation
+COPY apps/server apps/server
+
+RUN yarn workspace server build
+RUN yarn install --production --pure-lockfile --cache-folder ./yarncacheprod; rm -rf ./yarncacheprod; 
+
+FROM node:18-alpine as runner
+
+WORKDIR /main
+COPY --from=builder /main/packages ./packages
+COPY --from=builder /main/apps ./apps
+COPY --from=builder /main/node_modules ./node_modules
+COPY --from=builder /main/package.json ./

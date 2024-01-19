@@ -1,0 +1,35 @@
+version: "3.8"
+name: my-project-prod
+services:
+  server:
+    container_name: meeting-app-next-express-server-prod
+    image: akbarnafisa/meeting-app-next-express-server-prod:${PROD_IMAGE_TAG}
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./apps/server/dockerfile.prod
+    env_file:
+      - stack.env
+    ports:
+      - ${SERVER_PORT}:4000
+    depends_on:
+      - postgres
+    command: >
+      sh -c "
+        yarn workspace server migrate:develop
+        yarn workspace server generate:develop
+        yarn workspace server start
+      "
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    container_name: my-project-prod-postgres
+    env_file:
+      - stack.env
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - meeting-app-db-prod:/var/lib/postgresql/data
+volumes:
+  meeting-app-db-prod:
+    driver: local
