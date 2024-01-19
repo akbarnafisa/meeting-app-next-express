@@ -18,6 +18,8 @@ services:
       - postgres
     command: >
       sh -c "
+        yarn workspace server migrate:develop
+        yarn workspace server generate:develop
         yarn workspace server dev
       "
   postgres:
