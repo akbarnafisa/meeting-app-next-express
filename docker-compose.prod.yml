@@ -16,6 +16,7 @@ services:
       - postgres
     networks:
       - nginx.docker
+      - meeting-app-next-express-server-prod-network
     command: >
       sh -c "
         yarn workspace server migrate:develop
@@ -28,10 +29,10 @@ services:
     container_name: meeting-app-next-express-server-prod-postgres
     env_file:
       - stack.env
-    ports:
-      - ${DB_PORT}:5432
     volumes:
       - meeting-app-db-prod:/var/lib/postgresql/data
+    networks:
+      - meeting-app-next-express-server-prod-network
 volumes:
   meeting-app-db-prod:
     driver: local
@@ -40,3 +41,5 @@ networks:
   nginx.docker:
     name: nginx.docker
     external: true
+  meeting-app-next-express-server-prod-network:
+
