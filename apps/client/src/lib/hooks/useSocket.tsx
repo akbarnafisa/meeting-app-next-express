@@ -9,6 +9,7 @@ import React, {
 import io, { Socket } from "socket.io-client";
 import { connectSocketIoServer } from "../socket";
 import useRoomStore from "@/store";
+import { API_URL } from "../constants";
 
 interface MyContextSocket {
   socket: Socket | null;
@@ -27,7 +28,7 @@ const SocketInitation = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
 
-    const newSocket = io("http://localhost:4000/");
+    const newSocket = io(API_URL || '');
     socketContext?.setSocket(newSocket);
 
     connectSocketIoServer(newSocket, meetingStore);
