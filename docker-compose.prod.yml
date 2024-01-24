@@ -14,6 +14,8 @@ services:
       - ${SERVER_PORT}:4000
     depends_on:
       - postgres
+    networks:
+      - nginx.docker
     command: >
       sh -c "
         yarn workspace server migrate:develop
@@ -33,3 +35,8 @@ services:
 volumes:
   meeting-app-db-prod:
     driver: local
+
+networks:
+  nginx.docker:
+    name: nginx.docker
+    external: true
