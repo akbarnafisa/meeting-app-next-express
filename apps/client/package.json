@@ -17,6 +17,7 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "bufferutil": "^4.0.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.309.0",
@@ -29,6 +30,8 @@
     "supports-color": "8.1.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
+    "utf-8-validate": "^6.0.3",
+    "ws": "^8.16.0",
     "zod": "^3.22.4",
     "zustand": "^4.4.7"
   },
