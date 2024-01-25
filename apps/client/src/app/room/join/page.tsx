@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { API_URL } from "@/lib/constants";
+import { API_REST } from "@/lib/constants";
 import useRoomStore from "@/store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ export default function HostRoom() {
   };
 
   const onSubmitRoomHost = async () => {
-    const data = await fetch(`${API_URL}/rtc/room/${meetingId}`);
+    const data = await fetch(`${API_REST}/rtc/room/${meetingId}`);
     const result = await data.json() as any;
 
     if (!result.success) {

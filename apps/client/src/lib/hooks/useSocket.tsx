@@ -9,7 +9,7 @@ import React, {
 import io, { Socket } from "socket.io-client";
 import { connectSocketIoServer } from "../socket";
 import useRoomStore from "@/store";
-import { API_URL, SOCKET_PATH } from "../constants";
+import { API_BASE_URL, SOCKET_PATH } from "../constants";
 
 interface MyContextSocket {
   socket: Socket | null;
@@ -27,7 +27,7 @@ const SocketInitation = ({ children }: { children: React.ReactNode }) => {
   const meetingStore = useRoomStore((state) => state);
 
   useEffect(() => {
-    const newSocket = io(API_URL, {
+    const newSocket = io(API_BASE_URL, {
       path: SOCKET_PATH + "/socket.io",
     });
 
