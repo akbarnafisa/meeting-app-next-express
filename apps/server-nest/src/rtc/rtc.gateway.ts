@@ -10,8 +10,12 @@ import { Socket } from 'socket.io';
 import { ICreateRoom } from './interfaces';
 import { RtcRepository } from './rtc.repository';
 
-@WebSocketGateway()
-export class SocketGateway
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
+})
+export class RtcGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
   @WebSocketServer()
@@ -49,17 +53,17 @@ export class SocketGateway
     });
   }
 
-  async handleConnectionInit(socket: any): Promise<void> {
+  async handleConnectionInit(socket: Socket): Promise<void> {
     console.log('handleConnectionInit');
     socket.emit('on gateway connection');
   }
 
-  async handleConnection(socket: any): Promise<void> {
+  async handleConnection(socket: Socket): Promise<void> {
     console.log('handleConnection');
     socket.emit('on gateway connection');
   }
 
-  async afterInit(socket: any): Promise<void> {
+  async afterInit(socket: Socket): Promise<void> {
     console.log('afterInit');
     socket.emit('on gateway init');
   }
