@@ -1,14 +1,14 @@
 version: "3.8"
-name: meeting-app-next-express
+name: meeting-app-next-nest
 services:
   server:
-    container_name: meeting-app-next-express-server
+    container_name: meeting-app-next-nest-server
     restart: unless-stopped
     build:
       context: .
-      dockerfile: ./apps/server/dockerfile.dev
+      dockerfile: ./apps/server-nest/dockerfile.dev
     ports:
-      - ${SERVER_PORT}:4000
+      - ${SERVER_PORT}:3131
     volumes:
       - .:/main
       - /main/node_modules/
@@ -18,27 +18,27 @@ services:
       - postgres
     command: >
       sh -c "
-        yarn workspace server migrate:develop
-        yarn workspace server generate:develop
-        yarn workspace server dev
+        yarn workspace server-nest migrate:develop
+        yarn workspace server-nest generate:develop
+        yarn workspace server-nest start:dev
       "
     networks:
       - nginx.docker
-      - meeting-app-next-express-server-dev-network
+      - meeting-app-next-nest-server-dev-network
   postgres:
     image: postgres
     restart: unless-stopped
-    container_name: meeting-app-next-express-postgres
+    container_name: meeting-app-next-nest-postgres
     env_file:
       - ./.env.dev
     volumes:
       - db:/var/lib/postgresql/data
       - ./apps/server/init-db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     networks:
-      - meeting-app-next-express-server-dev-network
+      - meeting-app-next-nest-server-dev-network
 
   client:
-    container_name: meeting-app-next-express-client
+    container_name: meeting-app-next-nest-client
     restart: unless-stopped
     build:
       context: .
@@ -58,5 +58,5 @@ networks:
   nginx.docker:
     name: nginx.docker
     external: true
-  meeting-app-next-express-server-dev-network:
+  meeting-app-next-nest-server-dev-network:
 
