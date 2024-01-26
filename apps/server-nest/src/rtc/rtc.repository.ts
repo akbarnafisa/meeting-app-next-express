@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { IUser } from './interfaces';
 
 @Injectable()
 export class RtcRepository {
@@ -17,5 +18,46 @@ export class RtcRepository {
     });
 
     return data;
+  }
+
+  createSocketRoom() {
+    return this.prisma['socket_room'].create({
+      data: {
+        isActive: true,
+      },
+      select: {
+        roomId: true,
+        createdAt: true,
+        isActive: true,
+      },
+    });
+  }
+
+  insertSocketUser(createUser: IUser) {
+    return this.prisma['socket_user'].create({
+      data: {
+        name: createUser.name,
+        roomId: createUser.roomId,
+        socketId: createUser.socketId,
+        isHostRoom: createUser.isHostRoom,
+      },
+      select: {
+        roomId: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  queryUsersByRoomId(roomId: string) {
+    return this.prisma['socket_user'].findMany({
+      where: {
+        roomId: roomId,
+      },
+      select: {
+        userId: true,
+        name: true,
+        socketId: true,
+      },
+    });
   }
 }

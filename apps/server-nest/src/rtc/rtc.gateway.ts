@@ -4,9 +4,11 @@ import {
   WebSocketServer,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { RtcService } from './rtc.service';
+import { ICreateRoom } from './interfaces';
+import { RtcRepository } from './rtc.repository';
 
 @WebSocketGateway()
 export class SocketGateway
@@ -15,25 +17,55 @@ export class SocketGateway
   @WebSocketServer()
   private server: Socket;
 
-  constructor(private readonly socketService: RtcService) {}
+  constructor(private readonly rtcRepository: RtcRepository) {}
 
-  async handleConnectionInit(client: any): Promise<void> {
+  @SubscribeMessage('create-new-room')
+  async handleCreateNewRoom(
+    socket: Socket,
+    payload: ICreateRoom,
+  ): Promise<void> {
+    const socketRoom = await this.rtcRepository.createSocketRoom();
+    await this.rtcRepository.insertSocketUser({
+      name: payload.meetingName,
+      roomId: socketRoom.roomId,
+      socketId: socket.id,
+      isHostRoom: payload.isHostMeeting,
+    });
+
+    socket.join(socketRoom.roomId);
+
+    socket.emit('room-id', {
+      success: true,
+      socketId: socket.id,
+      roomId: socketRoom.roomId,
+    });
+
+    const connectedUsers = await this.rtcRepository.queryUsersByRoomId(
+      socketRoom.roomId,
+    );
+
+    socket.emit('room-users', {
+      connectedUsers,
+    });
+  }
+
+  async handleConnectionInit(socket: any): Promise<void> {
     console.log('handleConnectionInit');
-    client.emit('on gateway connection');
+    socket.emit('on gateway connection');
   }
 
-  async handleConnection(client: any): Promise<void> {
+  async handleConnection(socket: any): Promise<void> {
     console.log('handleConnection');
-    client.emit('on gateway connection');
+    socket.emit('on gateway connection');
   }
 
-  async afterInit(client: any): Promise<void> {
+  async afterInit(socket: any): Promise<void> {
     console.log('afterInit');
-    client.emit('on gateway init');
+    socket.emit('on gateway init');
   }
 
-  async handleDisconnect(client: Socket): Promise<void> {
+  async handleDisconnect(socket: Socket): Promise<void> {
     console.log('handleDisconnect');
-    client.emit('on gateway init');
+    socket.emit('on gateway init');
   }
 }
