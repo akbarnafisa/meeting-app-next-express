@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { RtcModule } from './rtc/rtc.module';
+
 import { PrismaModule } from './prisma/prisma.module';
+import { RtcModule } from './rtc/rtc.module';
 
 @Module({
-  imports: [RtcModule, PrismaModule],
+  imports: [PrismaModule, RtcModule],
 })
 export class AppModule {}
