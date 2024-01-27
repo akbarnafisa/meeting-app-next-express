@@ -20,7 +20,7 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
       case 'P2025': {
         const status = HttpStatus.CONFLICT;
         response.status(status).json({
-          errors: `${exception.meta?.cause}`,
+          error: `${exception.meta?.cause}`,
         });
         break;
       }

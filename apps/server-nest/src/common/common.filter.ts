@@ -22,7 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       responseMessage = {
         success: false,
         data: null,
-        errors: {
+        error: {
           errorMsg: message,
         },
       };

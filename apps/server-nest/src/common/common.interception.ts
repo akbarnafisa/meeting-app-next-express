@@ -24,7 +24,7 @@ export class TransformInterceptor<T>
         return {
           success: true,
           data,
-          errors: null,
+          error: null,
         };
       }),
     );

@@ -1,7 +1,7 @@
 export interface ResponseErrorInterface {
   success: boolean;
   data: any | null;
-  errors: {
+  error: {
     errorMsg?: string;
     errorCode?: string;
     fieldError?: {
