@@ -7,14 +7,15 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3131);
+  app.enableCors();
 
   app.useWebSocketAdapter(new IoAdapter(app));
-  app.enableCors();
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
+
+  await app.listen(3131);
 }
 bootstrap();
