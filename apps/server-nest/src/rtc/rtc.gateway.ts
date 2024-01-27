@@ -7,7 +7,7 @@ import {
   SubscribeMessage,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { ICreateRoom } from './interfaces';
+import { ICreateRoom, IJoinRoom } from './interfaces';
 import { RtcRepository } from './rtc.repository';
 
 @WebSocketGateway({
@@ -53,9 +53,56 @@ export class RtcGateway
     });
   }
 
-  async handleConnectionInit(socket: Socket): Promise<void> {
-    console.log('handleConnectionInit');
-    socket.emit('on gateway connection');
+  @SubscribeMessage('join-room')
+  async handleJoinRoom(socket: Socket, payload: IJoinRoom): Promise<void> {
+    await this.rtcRepository.insertSocketUser({
+      name: payload.meetingName,
+      roomId: payload.meetingId,
+      socketId: socket.id,
+    });
+
+    socket.join(payload.meetingId);
+
+    socket.emit('room-id', {
+      success: true,
+      socketId: socket.id,
+      roomId: payload.meetingId,
+    });
+
+    const connectedUsers = await this.rtcRepository.queryUsersByRoomId(
+      payload.meetingId,
+    );
+
+    socket
+      .to(payload.meetingId)
+      .emit('connection-prepare', { connectedUserSocketId: socket.id });
+
+    this.server.in(payload.meetingId).emit('room-users', {
+      connectedUsers,
+    });
+  }
+
+  @SubscribeMessage('connection-signal')
+  async handleConnectionSignal(socket: Socket, payload: any): Promise<void> {
+    const signalingData = {
+      signal: payload.signal,
+      connectedUserSocketId: socket.id,
+    };
+
+    this.server
+      .to(payload.connectedUserSocketId)
+      .emit('connection-signal', signalingData);
+  }
+
+  @SubscribeMessage('connection-init')
+  async handleConnectionInit(socket: Socket, payload: any): Promise<void> {
+    const initData = {
+      connectedUserSocketId: socket.id,
+    };
+
+    this.server
+      .to(payload.connectedUserSocketId)
+      .emit('connection-init', initData);
   }
 
   async handleConnection(socket: Socket): Promise<void> {
@@ -69,7 +116,26 @@ export class RtcGateway
   }
 
   async handleDisconnect(socket: Socket): Promise<void> {
-    console.log('handleDisconnect');
-    socket.emit('on gateway init');
+    const getUser = await this.rtcRepository.queryUserBySocketId(socket.id);
+
+    console.log('disconnected socket', getUser);
+
+    if (getUser) {
+      await this.rtcRepository.removeUserByUserId(getUser.userId);
+
+      socket.leave(getUser.roomId);
+
+      const connectedUsers = await this.rtcRepository.queryUsersByRoomId(
+        getUser.roomId,
+      );
+
+      this.server.to(getUser.roomId).emit('user-disconnected', {
+        socketId: socket.id,
+      });
+
+      this.server.to(getUser.roomId).emit('room-users', {
+        connectedUsers,
+      });
+    }
   }
 }

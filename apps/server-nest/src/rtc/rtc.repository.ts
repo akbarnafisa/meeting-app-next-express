@@ -33,6 +33,33 @@ export class RtcRepository {
     });
   }
 
+  queryUserBySocketId(socketId: string) {
+    return this.prisma['socket_user'].findFirst({
+      where: {
+        socketId,
+      },
+      select: {
+        userId: true,
+        roomId: true,
+        socketId: true,
+        name: true,
+      },
+    });
+  }
+
+  removeUserByUserId(socketId: string) {
+    return this.prisma['socket_user'].delete({
+      where: {
+        userId: socketId,
+      },
+      select: {
+        roomId: true,
+        socketId: true,
+        name: true,
+      },
+    });
+  }
+
   insertSocketUser(createUser: IUser) {
     return this.prisma['socket_user'].create({
       data: {
