@@ -49,6 +49,7 @@ export const showVideoStream = (
   const videoElement = document.createElement("video");
   videoElement.autoplay = true;
   videoElement.srcObject = stream;
+  videoElement.volume = 0
 
   if (connectedUserSocketId) {
     videoElement.id = `${connectedUserSocketId}.video`;
