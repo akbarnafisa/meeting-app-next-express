@@ -23,7 +23,7 @@ export const getLocalPreviewAndRoomConnection = async (
       audio: true,
       video: true,
     });
-    showVideoStream(localStream, socketId);
+    showVideoStream(localStream, socketId, true);
 
     config.isHostMeeting
       ? createNewRoom(socket, config)
@@ -35,7 +35,8 @@ export const getLocalPreviewAndRoomConnection = async (
 
 export const showVideoStream = (
   stream: MediaStream,
-  connectedUserSocketId: string = ""
+  connectedUserSocketId: string = "",
+  muteAudio: boolean
 ) => {
   const videosContainer = document.getElementById("videos_container");
   videosContainer?.classList.add("videos_container_styles");
@@ -49,7 +50,7 @@ export const showVideoStream = (
   const videoElement = document.createElement("video");
   videoElement.autoplay = true;
   videoElement.srcObject = stream;
-  videoElement.volume = 0
+  videoElement.volume = muteAudio ? 0 : 1
 
   if (connectedUserSocketId) {
     videoElement.id = `${connectedUserSocketId}.video`;
@@ -108,7 +109,7 @@ const getConfiguration = () => {
 };
 
 const addStream = (stream: MediaStream, connectedUserSocketId: string) => {
-  showVideoStream(stream, connectedUserSocketId);
+  showVideoStream(stream, connectedUserSocketId, false);
 };
 
 export const concatNewMessage = (message: IChatMessage) => {
